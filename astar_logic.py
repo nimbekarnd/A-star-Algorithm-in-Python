@@ -166,57 +166,6 @@ class Astar(object):
         return False
 
 
-
-
-
-
-    # def ActionMoveLeft(self, currRow, currCol):
-    #     if(self.IsValid(currRow, currCol - 1) and self.IsObstacle(currRow, currCol - 1) == False):
-    #         return True
-    #     return False
-
-    # # action move right
-    # def ActionMoveRight(self, currRow, currCol):
-    #     if(self.IsValid(currRow, currCol + 1) and self.IsObstacle(currRow, currCol + 1) == False):
-    #         return True
-    #     return False
-
-    # # action move up
-    # def ActionMoveUp(self, currRow, currCol):
-    #     if(self.IsValid(currRow - 1, currCol) and self.IsObstacle(currRow - 1, currCol) == False):
-    #         return True
-    #     return False
-
-    # # action move down
-    # def ActionMoveDown(self, currRow, currCol):
-    #     if(self.IsValid(currRow + 1, currCol) and self.IsObstacle(currRow + 1, currCol) == False):
-    #         return True
-    #     return False
-
-    # # action move right up
-    # def ActionMoveRightUp(self, currRow, currCol):
-    #     if(self.IsValid(currRow - 1, currCol + 1) and self.IsObstacle(currRow - 1, currCol + 1) == False):
-    #         return True
-    #     return False
-
-    # # action move right down
-    # def ActionMoveRightDown(self, currRow, currCol):
-    #     if(self.IsValid(currRow + 1, currCol + 1) and self.IsObstacle(currRow + 1, currCol + 1) == False):
-    #         return True
-    #     return False
-
-    # # action move left down
-    # def ActionMoveLeftDown(self, currRow, currCol):
-    #     if(self.IsValid(currRow + 1, currCol - 1) and self.IsObstacle(currRow + 1, currCol - 1) == False):
-    #         return True
-    #     return False
-
-    # # action move left up
-    # def ActionMoveLeftUp(self, currRow, currCol):
-    #     if(self.IsValid(currRow - 1, currCol - 1) and self.IsObstacle(currRow - 1, currCol - 1) == False):
-    #         return True
-    #     return False
-
     def CheckIfGoal(self, currRow, currCol):
         check = (((currRow - self.goal[0]) * (currRow - self.goal[0])) + ((currCol - self.goal[1]) * (currCol - self.goal[1])) - ( 1.5 * 1.5))
         if(check <= 0):
@@ -238,13 +187,15 @@ class Astar(object):
         visited = {}
         path = {}
        
-        for row in range(10, (self.numRows + 1)*10, 5):
-            for col in range(10, (self.numCols + 1)*10, 5):
+
+       # for a in np.arange(f1-1,f1+1.5,0.5)
+        for row in np.arange(1, self.numRows + 1, 0.5):
+            for col in np.arange(1, self.numCols + 1, 0.5):
                 for angle in range(0,360,30):
-                    distMap[(row/10, col/10, angle)] = float('inf')
-                    path[(row/10, col/10, angle)] = -1
-                    visited[(row/10, col/10, angle)] = False
-                    # print(distMap)
+                    distMap[(row, col, angle)] = float('inf')
+                    path[(row, col, angle)] = -1
+                    visited[(row, col, angle)] = False
+                    # print(visited)
                     # print(self.start)
             
         # create queue, push the source and mark distance from source to source as zero
@@ -252,6 +203,7 @@ class Astar(object):
         explored_states = []
         queue = []
         heappush(queue, (0, self.start))
+        # print(queue)
         distMap[self.start] = 0
         # print(queue)
         # print(distMap)
@@ -259,7 +211,12 @@ class Astar(object):
 
     
         # run astar algorithm and find shortest path
+        g=0
         while(len(queue) > 0):
+            # g=g+1
+            # if(g>=6):
+            #     print(queue)
+            #     break
 
             _, currNode = heappop(queue)
             # print(currNode)
@@ -282,8 +239,10 @@ class Astar(object):
 
 
             a2 = currNode[2] + 60
+            # print(a2,"first")
             if(a2 >= 360):
                 a2 = a2 - 360
+                # print(a2,"second")
 
             a3 = currNode[2] - 30
             if(a3 < 0):
@@ -296,84 +255,49 @@ class Astar(object):
 
             h_dist = (((currNode[0] - self.goal[0]) ** 2) + 
                        ((currNode[1] - self.goal[1]) ** 2))
+            h_dist = math.sqrt(h_dist)
+            # print(h_dist)
             
         
             
             
-            if(self.ActionMove30Up(currNode[0], currNode[1], currNode[2]) and visited[(currNode[0] - 0.5, currNode[1] + 1, a1)] == False and (distMap[(currNode[0] - 0.5, currNode[1] + 1, a1)] > (distMap[currNode] + h_dist))):
+            if(self.ActionMove30Up(currNode[0], currNode[1], currNode[2]) and visited[(currNode[0] + 0.5, currNode[1] + 1, a1)] == False and (distMap[(currNode[0] + 0.5, currNode[1] + 1, a1)] > (distMap[currNode] + h_dist+1.12))):
                 # print("30Up",a1)
-                distMap[(currNode[0] - 0.5, currNode[1] + 1, a1)] = distMap[currNode] + h_dist
-                path[(currNode[0] - 0.5, currNode[1] + 1, a1)] = currNode
+                distMap[(currNode[0] + 0.5, currNode[1] + 1, a1)] = distMap[currNode] + h_dist +1.12
+                path[(currNode[0] + 0.5, currNode[1] + 1, a1)] = currNode
                 # print(path[(currNode[0] - 0.5, currNode[1] + 1, a1)])
-                heappush(queue, (distMap[(currNode[0] - 0.5, currNode[1] + 1, a1)], (currNode[0] - 0.5, currNode[1] + 1, a1)))
+                heappush(queue, (distMap[(currNode[0] + 0.5, currNode[1] + 1, a1)], (currNode[0] + 0.5, currNode[1] + 1, a1)))
+                print(distMap[(currNode[0] + 0.5, currNode[1] + 1, a1)], (currNode[0] + 0.5, currNode[1] + 1, a1))
 
-            if(self.ActionMove60Up(currNode[0], currNode[1], currNode[2]) and visited[(currNode[0] - 1, currNode[1] + 0.5, a2)] == False and (distMap[(currNode[0] - 1, currNode[1] + 0.5, a2)] > distMap[currNode] + h_dist)):
+            if(self.ActionMove60Up(currNode[0], currNode[1], currNode[2]) and visited[(currNode[0] + 1, currNode[1] + 0.5, a2)] == False and (distMap[(currNode[0] + 1, currNode[1] + 0.5, a2)] > distMap[currNode] + h_dist+1.12)):
                 # print("60Up",a2)
-                distMap[(currNode[0] - 1, currNode[1] + 0.5, a2)] = distMap[currNode] + h_dist
-                path[(currNode[0] - 1, currNode[1] + 0.5, a2)] = currNode
+                # print(" ")
+                # print(" ")
+                distMap[(currNode[0] + 1, currNode[1] + 0.5, a2)] = distMap[currNode] + h_dist+1.12
+                path[(currNode[0] + 1, currNode[1] + 0.5, a2)] = currNode
                 heappush(queue, (distMap[(currNode[0] + 1, currNode[1] + 0.5, a2)], (currNode[0] + 1, currNode[1] + 0.5, a2)))
 
-            if(self.ActionMove30Down(currNode[0], currNode[1], currNode[2]) and visited[(currNode[0] + 0.5, currNode[1] + 1, a3)] == False and (distMap[(currNode[0] + 0.5, currNode[1] + 1, a3)] > distMap[currNode] + h_dist)):
+            if(self.ActionMove30Down(currNode[0], currNode[1], currNode[2]) and visited[(currNode[0] - 0.5, currNode[1] + 1, a3)] == False and (distMap[(currNode[0] - 0.5, currNode[1] + 1, a3)] > distMap[currNode] + h_dist+1.12)):
                 # print("30Down",a3)
-                distMap[(currNode[0] + 0.5, currNode[1] + 1, a3)] = distMap[currNode] + h_dist
-                path[(currNode[0] + 0.5, currNode[1] + 1, a3)] = currNode
-                heappush(queue, (distMap[(currNode[0] + 0.5, currNode[1] + 1, a3)], (currNode[0] + 0.5, currNode[1] + 1, a3)))
+                distMap[(currNode[0] - 0.5, currNode[1] + 1, a3)] = distMap[currNode] + h_dist+1.12
+                path[(currNode[0] - 0.5, currNode[1] + 1, a3)] = currNode
+                heappush(queue, (distMap[(currNode[0] - 0.5, currNode[1] + 1, a3)], (currNode[0] - 0.5, currNode[1] + 1, a3)))
 
-            if(self.ActionMove60Down(currNode[0], currNode[1], currNode[2]) and visited[(currNode[0] + 1, currNode[1] + 0.5, a4)] == False and (distMap[(currNode[0] + 1, currNode[1] + 0.5, a4)] > distMap[currNode] + h_dist)):
+            if(self.ActionMove60Down(currNode[0], currNode[1], currNode[2]) and visited[(currNode[0] - 1, currNode[1] + 0.5, a4)] == False and (distMap[(currNode[0] - 1, currNode[1] + 0.5, a4)] > distMap[currNode] + h_dist+1.12)):
                 # print("60Down",a4)
-                distMap[(currNode[0] + 1, currNode[1] + 0.5, a4)] = distMap[currNode] + h_dist
-                path[(currNode[0] + 1, currNode[1] + 0.5, a4)] = currNode
-                heappush(queue, (distMap[(currNode[0] + 1, currNode[1] + 0.5, a4)], (currNode[0] + 1, currNode[1] + 0.5, a4)))
+                distMap[(currNode[0] - 1, currNode[1] + 0.5, a4)] = distMap[currNode] + h_dist+1.12
+                path[(currNode[0] - 1, currNode[1] + 0.5, a4)] = currNode
+                heappush(queue, (distMap[(currNode[0] - 1, currNode[1] + 0.5, a4)], (currNode[0] - 1, currNode[1] + 0.5, a4)))
 
-            if(self.ActionMoveStraight(currNode[0], currNode[1], currNode[2]) and visited[(currNode[0], currNode[1] + 1, currNode[2])] == False and (distMap[(currNode[0], currNode[1] + 1, currNode[2])] > distMap[currNode] + h_dist)):
+            if(self.ActionMoveStraight(currNode[0], currNode[1], currNode[2]) and visited[(currNode[0], currNode[1] + 1, currNode[2])] == False and (distMap[(currNode[0], currNode[1] + 1, currNode[2])] > distMap[currNode] + h_dist+1)):
                 # print("Straights none")
-                distMap[(currNode[0], currNode[1] + 1, currNode[2])] = distMap[currNode] + h_dist
+                distMap[(currNode[0], currNode[1] + 1, currNode[2])] = distMap[currNode] + h_dist+1
                 path[(currNode[0], currNode[1] + 1, currNode[2])] = currNode
                 heappush(queue, (distMap[(currNode[0], currNode[1] + 1, currNode[2])], (currNode[0], currNode[1] + 1, currNode[2])))
 
 
 
 
-            # if(self.ActionMoveLeft(currNode[0], currNode[1]) and visited[(currNode[0], currNode[1] - 1)] == False and (distMap[(currNode[0], currNode[1] - 1)] > distMap[currNode] + 1)):
-            #     distMap[(currNode[0], currNode[1] - 1)] = distMap[currNode] + 1
-            #     path[(currNode[0], currNode[1] - 1)] = currNode
-            #     heappush(queue, (distMap[(currNode[0], currNode[1] - 1)], (currNode[0], currNode[1] - 1)))
-            
-            # if(self.ActionMoveRight(currNode[0], currNode[1]) and visited[(currNode[0], currNode[1] + 1)] == False and (distMap[(currNode[0], currNode[1] + 1)] > distMap[currNode] + 1)):
-            #     distMap[(currNode[0], currNode[1] + 1)] = distMap[currNode] + 1
-            #     path[(currNode[0], currNode[1] + 1)] = currNode
-            #     heappush(queue, (distMap[(currNode[0], currNode[1] + 1)], (currNode[0], currNode[1] + 1)))
-            
-            # if(self.ActionMoveUp(currNode[0], currNode[1]) and visited[(currNode[0] - 1, currNode[1])] == False and (distMap[(currNode[0] - 1, currNode[1])] > distMap[currNode] + 1)):
-            #     distMap[(currNode[0] - 1, currNode[1])] = distMap[currNode] + 1
-            #     path[(currNode[0] - 1, currNode[1])] = currNode
-            #     heappush(queue, (distMap[(currNode[0] - 1, currNode[1])], (currNode[0] - 1, currNode[1])))
-            
-            # if(self.ActionMoveDown(currNode[0], currNode[1]) and visited[(currNode[0] + 1, currNode[1])] == False and (distMap[(currNode[0] + 1, currNode[1])] > distMap[currNode] + 1)):
-            #     distMap[(currNode[0] + 1, currNode[1])] = distMap[currNode] + 1
-            #     path[(currNode[0] + 1, currNode[1])] = currNode
-            #     heappush(queue, (distMap[(currNode[0] + 1, currNode[1])], (currNode[0] + 1, currNode[1])))
-            
-            # if(self.ActionMoveLeftDown(currNode[0] + 1, currNode[1] - 1) and visited[(currNode[0] + 1, currNode[1] - 1)] == False and (distMap[(currNode[0] + 1, currNode[1] - 1)] > distMap[currNode] + 1.4142)):
-            #     distMap[(currNode[0] + 1, currNode[1] - 1)] = distMap[currNode] + 1.4142
-            #     path[(currNode[0] + 1, currNode[1] - 1)] = currNode
-            #     heappush(queue, (distMap[(currNode[0] + 1, currNode[1] - 1)], (currNode[0] + 1, currNode[1] - 1)))
-            
-            # if(self.ActionMoveRightDown(currNode[0], currNode[1]) and visited[(currNode[0] + 1, currNode[1] + 1)] == False and (distMap[(currNode[0] + 1, currNode[1] + 1)] > distMap[currNode] + 1.4142)):
-            #     distMap[(currNode[0] + 1, currNode[1] + 1)] = distMap[currNode] + 1.4142
-            #     path[(currNode[0] + 1, currNode[1] + 1)] = currNode
-            #     heappush(queue, (distMap[(currNode[0] + 1, currNode[1] + 1)], (currNode[0] + 1, currNode[1] + 1)))
-            
-            # if(self.ActionMoveRightUp(currNode[0], currNode[1]) and visited[(currNode[0] - 1, currNode[1] + 1)] == False and (distMap[(currNode[0] - 1, currNode[1] + 1)] > distMap[currNode] + 1.4142)):
-            #     distMap[(currNode[0] - 1, currNode[1] + 1)] = distMap[currNode] + 1.4142
-            #     path[(currNode[0] - 1, currNode[1] + 1)] = currNode
-            #     heappush(queue, (distMap[(currNode[0] - 1, currNode[1] + 1)], (currNode[0] - 1, currNode[1] + 1)))
-            
-            # if(self.ActionMoveLeftUp(currNode[0], currNode[1]) and visited[(currNode[0] - 1, currNode[1] - 1)] == False and (distMap[(currNode[0] - 1, currNode[1] - 1)] > distMap[currNode] + 1.4142)):
-            #     distMap[(currNode[0] - 1, currNode[1] - 1)] = distMap[currNode] + 1.4142
-            #     path[(currNode[0] - 1, currNode[1] - 1)] = currNode
-            #     heappush(queue, (distMap[(currNode[0] - 1, currNode[1] - 1)], (currNode[0] - 1, currNode[1] - 1)))
-        
         # return if no optimal path
         check = []
         f1 = self.goal[0]
@@ -400,7 +324,7 @@ class Astar(object):
                 break
         if(NoPath == 0):
             print("NO VALID PATH")
-            return (explored_states, [], distMap[self.goal])
+            return (explored_states, [], distMap[f1,f2,0])
 
         for a in range(0,360,30):
             if(distMap[cat,dog,a] != ans):
@@ -408,17 +332,6 @@ class Astar(object):
 
         print(distMap[cat,dog,bird],"answer")
         result = (cat, dog, bird)
-
-
-
-        # print(path[3,3,0])
-
-
-
-        # # print(distMap[f1,f2,0],"goal")
-        # if((distMap[f1,f2,0] == float('inf')) and (distMap[f1,f2,30] == float('inf')) and (distMap[f1,f2,60] == float('inf')) and (distMap[f1,f2,90] == float('inf')) and (distMap[f1,f2,120] == float('inf')) and (distMap[f1,f2,150] == float('inf')) and (distMap[f1,f2,180] == float('inf')) and (distMap[f1,f2,210] == float('inf')) and (distMap[f1,f2,240] == float('inf')) and (distMap[f1,f2,270] == float('inf')) and (distMap[f1,f2,300] == float('inf')) and (distMap[f1,f2,330] == float('inf'))):
-        #     print("NO VALID PATH")
-        #     return (explored_states, [], distMap[self.goal])
         
         # backtrack path
         backtrack_states = []
@@ -428,7 +341,8 @@ class Astar(object):
             node = path[node]
         backtrack_states.append(self.start)
         backtrack_states = list(reversed(backtrack_states)) 
-        #print(backtrack_states)  
+        # print(backtrack_states) 
+        print(explored_states) 
         return (explored_states, backtrack_states, distMap[cat,dog,bird])
     
 
@@ -445,6 +359,8 @@ class Astar(object):
             image[int(self.numRows - state[0]), int(state[1] - 1)] = (255, 150, 0)
             if(count%75 == 0):
                 out.write(image)
+                cv2.imshow('explored', image)
+                cv2.waitKey(5)
             count = count + 1
 
         count = 0

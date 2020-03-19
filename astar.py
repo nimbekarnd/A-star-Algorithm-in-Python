@@ -3,20 +3,20 @@
 from astar_logic import *
 import sys
 
-startRow = int(input("Enter the row coordinate for start node (between 1 and 200) : "))
+startRow = float(input("Enter the row coordinate for start node (between 1 and 200) : "))
 #startRow = 50
-startCol = int(input("Enter the column coordinate for start node (between 1 and 300) : "))
+startCol = float(input("Enter the column coordinate for start node (between 1 and 300) : "))
 #startCol = 30
 startOrientation = int(input("Enter the Orientation of the robot (0/30/60/90/120/150/180/210/240/270/300/330) : "))
 #startOrientation = 60
-goalRow = int(input("Enter the row coordinate for goal node (between 1 and 200) : "))
+goalRow = float(input("Enter the row coordinate for goal node (between 1 and 200) : "))
 #goalRow = 185
-goalCol = int(input("Enter the column coordinate for goal node (between 1 and 300) : "))
+goalCol = float(input("Enter the column coordinate for goal node (between 1 and 300) : "))
 #goalCol = 285
-radius = int(input("Enter the radius for the robot : "))
-#radius = 1
-clearance = int(input("Enter the clearance for the robot : "))
-#clearance = 1
+# radius = int(input("Enter the radius for the robot : "))
+radius = 1
+# clearance = int(input("Enter the clearance for the robot : "))
+clearance = 1
 
 # take start and goal node as input
 start = (startRow, startCol, startOrientation)
