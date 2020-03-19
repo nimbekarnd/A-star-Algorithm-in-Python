@@ -159,57 +159,6 @@ class Astar(object):
         return False
 
 
-
-
-
-
-    # def ActionMoveLeft(self, currRow, currCol):
-    #     if(self.IsValid(currRow, currCol - 1) and self.IsObstacle(currRow, currCol - 1) == False):
-    #         return True
-    #     return False
-
-    # # action move right
-    # def ActionMoveRight(self, currRow, currCol):
-    #     if(self.IsValid(currRow, currCol + 1) and self.IsObstacle(currRow, currCol + 1) == False):
-    #         return True
-    #     return False
-
-    # # action move up
-    # def ActionMoveUp(self, currRow, currCol):
-    #     if(self.IsValid(currRow - 1, currCol) and self.IsObstacle(currRow - 1, currCol) == False):
-    #         return True
-    #     return False
-
-    # # action move down
-    # def ActionMoveDown(self, currRow, currCol):
-    #     if(self.IsValid(currRow + 1, currCol) and self.IsObstacle(currRow + 1, currCol) == False):
-    #         return True
-    #     return False
-
-    # # action move right up
-    # def ActionMoveRightUp(self, currRow, currCol):
-    #     if(self.IsValid(currRow - 1, currCol + 1) and self.IsObstacle(currRow - 1, currCol + 1) == False):
-    #         return True
-    #     return False
-
-    # # action move right down
-    # def ActionMoveRightDown(self, currRow, currCol):
-    #     if(self.IsValid(currRow + 1, currCol + 1) and self.IsObstacle(currRow + 1, currCol + 1) == False):
-    #         return True
-    #     return False
-
-    # # action move left down
-    # def ActionMoveLeftDown(self, currRow, currCol):
-    #     if(self.IsValid(currRow + 1, currCol - 1) and self.IsObstacle(currRow + 1, currCol - 1) == False):
-    #         return True
-    #     return False
-
-    # # action move left up
-    # def ActionMoveLeftUp(self, currRow, currCol):
-    #     if(self.IsValid(currRow - 1, currCol - 1) and self.IsObstacle(currRow - 1, currCol - 1) == False):
-    #         return True
-    #     return False
-
     def CheckIfGoal(self, currRow, currCol):
         check = (((currRow - self.goal[0]) * (currRow - self.goal[0])) + ((currCol - self.goal[1]) * (currCol - self.goal[1])) - ( 1.5 * 1.5))
         if(check <= 0):
@@ -310,49 +259,6 @@ class Astar(object):
                 distMap[(currNode[0], currNode[1] + 1, currNode[2])] = distMap[currNode] + 1
                 path[(currNode[0], currNode[1] + 1, currNode[2])] = currNode
                 heappush(queue, (distMap[(currNode[0], currNode[1] + 1, currNode[2])], (currNode[0], currNode[1] + 1, currNode[2])))
-
-
-
-
-            # if(self.ActionMoveLeft(currNode[0], currNode[1]) and visited[(currNode[0], currNode[1] - 1)] == False and (distMap[(currNode[0], currNode[1] - 1)] > distMap[currNode] + 1)):
-            #     distMap[(currNode[0], currNode[1] - 1)] = distMap[currNode] + 1
-            #     path[(currNode[0], currNode[1] - 1)] = currNode
-            #     heappush(queue, (distMap[(currNode[0], currNode[1] - 1)], (currNode[0], currNode[1] - 1)))
-            
-            # if(self.ActionMoveRight(currNode[0], currNode[1]) and visited[(currNode[0], currNode[1] + 1)] == False and (distMap[(currNode[0], currNode[1] + 1)] > distMap[currNode] + 1)):
-            #     distMap[(currNode[0], currNode[1] + 1)] = distMap[currNode] + 1
-            #     path[(currNode[0], currNode[1] + 1)] = currNode
-            #     heappush(queue, (distMap[(currNode[0], currNode[1] + 1)], (currNode[0], currNode[1] + 1)))
-            
-            # if(self.ActionMoveUp(currNode[0], currNode[1]) and visited[(currNode[0] - 1, currNode[1])] == False and (distMap[(currNode[0] - 1, currNode[1])] > distMap[currNode] + 1)):
-            #     distMap[(currNode[0] - 1, currNode[1])] = distMap[currNode] + 1
-            #     path[(currNode[0] - 1, currNode[1])] = currNode
-            #     heappush(queue, (distMap[(currNode[0] - 1, currNode[1])], (currNode[0] - 1, currNode[1])))
-            
-            # if(self.ActionMoveDown(currNode[0], currNode[1]) and visited[(currNode[0] + 1, currNode[1])] == False and (distMap[(currNode[0] + 1, currNode[1])] > distMap[currNode] + 1)):
-            #     distMap[(currNode[0] + 1, currNode[1])] = distMap[currNode] + 1
-            #     path[(currNode[0] + 1, currNode[1])] = currNode
-            #     heappush(queue, (distMap[(currNode[0] + 1, currNode[1])], (currNode[0] + 1, currNode[1])))
-            
-            # if(self.ActionMoveLeftDown(currNode[0] + 1, currNode[1] - 1) and visited[(currNode[0] + 1, currNode[1] - 1)] == False and (distMap[(currNode[0] + 1, currNode[1] - 1)] > distMap[currNode] + 1.4142)):
-            #     distMap[(currNode[0] + 1, currNode[1] - 1)] = distMap[currNode] + 1.4142
-            #     path[(currNode[0] + 1, currNode[1] - 1)] = currNode
-            #     heappush(queue, (distMap[(currNode[0] + 1, currNode[1] - 1)], (currNode[0] + 1, currNode[1] - 1)))
-            
-            # if(self.ActionMoveRightDown(currNode[0], currNode[1]) and visited[(currNode[0] + 1, currNode[1] + 1)] == False and (distMap[(currNode[0] + 1, currNode[1] + 1)] > distMap[currNode] + 1.4142)):
-            #     distMap[(currNode[0] + 1, currNode[1] + 1)] = distMap[currNode] + 1.4142
-            #     path[(currNode[0] + 1, currNode[1] + 1)] = currNode
-            #     heappush(queue, (distMap[(currNode[0] + 1, currNode[1] + 1)], (currNode[0] + 1, currNode[1] + 1)))
-            
-            # if(self.ActionMoveRightUp(currNode[0], currNode[1]) and visited[(currNode[0] - 1, currNode[1] + 1)] == False and (distMap[(currNode[0] - 1, currNode[1] + 1)] > distMap[currNode] + 1.4142)):
-            #     distMap[(currNode[0] - 1, currNode[1] + 1)] = distMap[currNode] + 1.4142
-            #     path[(currNode[0] - 1, currNode[1] + 1)] = currNode
-            #     heappush(queue, (distMap[(currNode[0] - 1, currNode[1] + 1)], (currNode[0] - 1, currNode[1] + 1)))
-            
-            # if(self.ActionMoveLeftUp(currNode[0], currNode[1]) and visited[(currNode[0] - 1, currNode[1] - 1)] == False and (distMap[(currNode[0] - 1, currNode[1] - 1)] > distMap[currNode] + 1.4142)):
-            #     distMap[(currNode[0] - 1, currNode[1] - 1)] = distMap[currNode] + 1.4142
-            #     path[(currNode[0] - 1, currNode[1] - 1)] = currNode
-            #     heappush(queue, (distMap[(currNode[0] - 1, currNode[1] - 1)], (currNode[0] - 1, currNode[1] - 1)))
         
         # return if no optimal path
         check = []
@@ -380,7 +286,7 @@ class Astar(object):
                 break
         if(NoPath == 0):
             print("NO VALID PATH")
-            return (explored_states, [], distMap[self.goal])
+            return (explored_states, [], distMap[f1,f2,0])
 
         for a in range(0,360,30):
             if(distMap[cat,dog,a] != ans):
@@ -389,15 +295,6 @@ class Astar(object):
         print(distMap[cat,dog,bird],"answer")
         result = (cat, dog, bird)
 
-
-
-        # print(path[3,3,0])
-
-
-
-        # # print(distMap[f1,f2,0],"goal")
-        # if((distMap[f1,f2,0] == float('inf')) and (distMap[f1,f2,30] == float('inf')) and (distMap[f1,f2,60] == float('inf')) and (distMap[f1,f2,90] == float('inf')) and (distMap[f1,f2,120] == float('inf')) and (distMap[f1,f2,150] == float('inf')) and (distMap[f1,f2,180] == float('inf')) and (distMap[f1,f2,210] == float('inf')) and (distMap[f1,f2,240] == float('inf')) and (distMap[f1,f2,270] == float('inf')) and (distMap[f1,f2,300] == float('inf')) and (distMap[f1,f2,330] == float('inf'))):
-        #     print("NO VALID PATH")
         #     return (explored_states, [], distMap[self.goal])
         
         # backtrack path
