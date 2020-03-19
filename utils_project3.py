@@ -213,6 +213,10 @@ class Astar(object):
     def CheckIfGoal(self, currRow, currCol):
         check = (((currRow - self.goal[0]) * (currRow - self.goal[0])) + ((currCol - self.goal[1]) * (currCol - self.goal[1])) - ( 1.5 * 1.5))
         if(check <= 0):
+            global cat
+            global dog
+            cat = currRow
+            dog = currCol
             print("goal reached")
             return True
         else:
@@ -241,6 +245,9 @@ class Astar(object):
         heappush(queue, (0, self.start))
         distMap[self.start] = 0
         # print(queue)
+        # print(distMap)
+      
+
     
         # run astar algorithm and find shortest path
         while(len(queue) > 0):
@@ -274,31 +281,32 @@ class Astar(object):
 
             
             if(self.ActionMove30Up(currNode[0], currNode[1], currNode[2]) and visited[(currNode[0] - 0.5, currNode[1] + 1, a1)] == False and (distMap[(currNode[0] - 0.5, currNode[1] + 1, a1)] > distMap[currNode] + 1.12)):
-                print("30Up",a1)
+                # print("30Up",a1)
                 distMap[(currNode[0] - 0.5, currNode[1] + 1, a1)] = distMap[currNode] + 1
                 path[(currNode[0] - 0.5, currNode[1] + 1, a1)] = currNode
+                # print(path[(currNode[0] - 0.5, currNode[1] + 1, a1)])
                 heappush(queue, (distMap[(currNode[0] - 0.5, currNode[1] + 1, a1)], (currNode[0] - 0.5, currNode[1] + 1, a1)))
 
             if(self.ActionMove60Up(currNode[0], currNode[1], currNode[2]) and visited[(currNode[0] - 1, currNode[1] + 0.5, a2)] == False and (distMap[(currNode[0] - 1, currNode[1] + 0.5, a2)] > distMap[currNode] + 1.12)):
-                print("60Up",a2)
+                # print("60Up",a2)
                 distMap[(currNode[0] - 1, currNode[1] + 0.5, a2)] = distMap[currNode] + 1
                 path[(currNode[0] - 1, currNode[1] + 0.5, a2)] = currNode
                 heappush(queue, (distMap[(currNode[0] + 1, currNode[1] + 0.5, a2)], (currNode[0] + 1, currNode[1] + 0.5, a2)))
 
             if(self.ActionMove30Down(currNode[0], currNode[1], currNode[2]) and visited[(currNode[0] + 0.5, currNode[1] + 1, a3)] == False and (distMap[(currNode[0] + 0.5, currNode[1] + 1, a3)] > distMap[currNode] + 1.12)):
-                print("30Down",a3)
+                # print("30Down",a3)
                 distMap[(currNode[0] + 0.5, currNode[1] + 1, a3)] = distMap[currNode] + 1
                 path[(currNode[0] + 0.5, currNode[1] + 1, a3)] = currNode
                 heappush(queue, (distMap[(currNode[0] + 0.5, currNode[1] + 1, a3)], (currNode[0] + 0.5, currNode[1] + 1, a3)))
 
             if(self.ActionMove60Down(currNode[0], currNode[1], currNode[2]) and visited[(currNode[0] + 1, currNode[1] + 0.5, a4)] == False and (distMap[(currNode[0] + 1, currNode[1] + 0.5, a4)] > distMap[currNode] + 1.12)):
-                print("60Down",a4)
+                # print("60Down",a4)
                 distMap[(currNode[0] + 1, currNode[1] + 0.5, a4)] = distMap[currNode] + 1
                 path[(currNode[0] + 1, currNode[1] + 0.5, a4)] = currNode
                 heappush(queue, (distMap[(currNode[0] + 1, currNode[1] + 0.5, a4)], (currNode[0] + 1, currNode[1] + 0.5, a4)))
 
             if(self.ActionMoveStraight(currNode[0], currNode[1], currNode[2]) and visited[(currNode[0], currNode[1] + 1, currNode[2])] == False and (distMap[(currNode[0], currNode[1] + 1, currNode[2])] > distMap[currNode] + 1)):
-                print("Straights none")
+                # print("Straights none")
                 distMap[(currNode[0], currNode[1] + 1, currNode[2])] = distMap[currNode] + 1
                 path[(currNode[0], currNode[1] + 1, currNode[2])] = currNode
                 heappush(queue, (distMap[(currNode[0], currNode[1] + 1, currNode[2])], (currNode[0], currNode[1] + 1, currNode[2])))
@@ -347,48 +355,91 @@ class Astar(object):
             #     heappush(queue, (distMap[(currNode[0] - 1, currNode[1] - 1)], (currNode[0] - 1, currNode[1] - 1)))
         
         # return if no optimal path
-        if(distMap[self.goal] == float('inf')):
+        check = []
+        f1 = self.goal[0]
+        f2 = self.goal[1]
+        for a in np.arange(f1-1,f1+1.5,0.5):
+            for b in np.arange(f2-1,f2+1.5,0.5):
+                for c in range(0,360,30):
+                    check.append(distMap[a,b,c])
+        for c in range(0,360,30):
+            check.append(distMap[f1,f2-1.5,c])
+        for c in range(0,360,30):
+            check.append(distMap[f1,f2+1.5,c])
+        for c in range(0,360,30):
+            check.append(distMap[f1+1.5,f2,c])
+        for c in range(0,360,30):
+            check.append(distMap[f1-1.5,f2,c])
+        # print(len(check))
+        NoPath = 0
+        ans = float('inf')
+        for a in range(len(check)):
+            if(check[a] != ans):
+                print("There exists a path")
+                NoPath = 1
+                break
+        if(NoPath == 0):
+            print("NO VALID PATH")
             return (explored_states, [], distMap[self.goal])
+
+        for a in range(0,360,30):
+            if(distMap[cat,dog,a] != ans):
+                bird = a
+
+        print(distMap[cat,dog,bird],"answer")
+        result = (cat, dog, bird)
+
+
+
+        # print(path[3,3,0])
+
+
+
+        # # print(distMap[f1,f2,0],"goal")
+        # if((distMap[f1,f2,0] == float('inf')) and (distMap[f1,f2,30] == float('inf')) and (distMap[f1,f2,60] == float('inf')) and (distMap[f1,f2,90] == float('inf')) and (distMap[f1,f2,120] == float('inf')) and (distMap[f1,f2,150] == float('inf')) and (distMap[f1,f2,180] == float('inf')) and (distMap[f1,f2,210] == float('inf')) and (distMap[f1,f2,240] == float('inf')) and (distMap[f1,f2,270] == float('inf')) and (distMap[f1,f2,300] == float('inf')) and (distMap[f1,f2,330] == float('inf'))):
+        #     print("NO VALID PATH")
+        #     return (explored_states, [], distMap[self.goal])
         
         # backtrack path
         backtrack_states = []
-        node = self.goal
+        node = result
         while(path[node] != -1):
             backtrack_states.append(node)
             node = path[node]
         backtrack_states.append(self.start)
-        backtrack_states = list(reversed(backtrack_states))    
-        return (explored_states, backtrack_states, distMap[self.goal])
+        backtrack_states = list(reversed(backtrack_states)) 
+        print(backtrack_states)  
+        return (explored_states, backtrack_states, distMap[cat,dog,bird])
     
     # animate path
-    # def animate(self, explored_states, backtrack_states, path):
-    #     fourcc = cv2.VideoWriter_fourcc(*'XVID')
-    #     out = cv2.VideoWriter(str(path), fourcc, 20.0, (self.numCols, self.numRows))
-    #     image = np.zeros((self.numRows, self.numCols, 3), dtype=np.uint8)
-    #     count = 0
-    #     for state in explored_states:
-    #         image[int(self.numRows - state[0]), int(state[1] - 1)] = (255, 255, 0)
-    #         if(count%75 == 0):
-    #             out.write(image)
-    #         count = count + 1
+    def animate(self, explored_states, backtrack_states, path):
+        fourcc = cv2.VideoWriter_fourcc(*'XVID')
+        out = cv2.VideoWriter(str(path), fourcc, 20.0, (self.numCols, self.numRows))
+        image = np.zeros((self.numRows, self.numCols, 3), dtype=np.uint8)
+        count = 0
+        for state in explored_states:
+            image[int(self.numRows - state[0]), int(state[1] - 1)] = (255, 255, 0)
+            if(count%75 == 0):
+                out.write(image)
+            count = count + 1
 
-    #     count = 0
-    #     for row in range(1, self.numRows + 1):
-    #         for col in range(1, self.numCols + 1):
-    #             if(image[int(self.numRows - row), int(col - 1), 0] == 0 and image[int(self.numRows - row), int(col - 1), 1] == 0 and image[int(self.numRows - row), int(col - 1), 2] == 0):
-    #                 if(self.IsValid(row, col) and self.IsObstacle(row, col) == False):
-    #                     image[int(self.numRows - row), int(col - 1)] = (154, 250, 0)
-    #                     if(count%75 == 0):
-    #                         out.write(image)
-    #                     count = count + 1
+        count = 0
+        for row in range(1, self.numRows + 1):
+            for col in range(1, self.numCols + 1):
+                if(image[int(self.numRows - row), int(col - 1), 0] == 0 and image[int(self.numRows - row), int(col - 1), 1] == 0 and image[int(self.numRows - row), int(col - 1), 2] == 0):
+                    if(self.IsValid(row, col) and self.IsObstacle(row, col) == False):
+                        image[int(self.numRows - row), int(col - 1)] = (154, 250, 0)
+                        if(count%75 == 0):
+                            out.write(image)
+                        count = count + 1
             
-    #     if(len(backtrack_states) > 0):
-    #         for state in backtrack_states:
-    #             image[int(self.numRows - state[0]), int(state[1] - 1)] = (0, 0, 255)
-    #             out.write(image)
-    #             cv2.imshow('result', image)
-    #             cv2.waitKey(5)
+        if(len(backtrack_states) > 0):
+            for state in backtrack_states:
+                image[int(self.numRows - state[0]), int(state[1] - 1)] = (0, 0, 255)
+                out.write(image)
+                cv2.imshow('result', image)
+                cv2.waitKey(5)
                 
-    #     cv2.waitKey(0)
-    #     cv2.destroyAllWindows()
-    #     out.release()
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+        out.release()
