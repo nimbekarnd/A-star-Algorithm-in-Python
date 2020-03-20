@@ -1,4 +1,4 @@
-Project 2 - ENPM661:
+Project 3 Phase 2 - ENPM661:
 
 
 Authors:
