@@ -1,7 +1,6 @@
 # header files
 import cv2
 import numpy as np 
-import matplotlib.pyplot as plt
 import math
 from heapq import heappush, heappop, heapify
 
@@ -192,61 +191,37 @@ class Astar(object):
         distMap = {}
         visited = {}
         path = {}
-       
-
-       # for a in np.arange(f1-1,f1+1.5,0.5)
         for row in np.arange(1, self.numRows + 1, 0.5):
             for col in np.arange(1, self.numCols + 1, 0.5):
                 for angle in range(0,360,30):
                     distMap[(row, col, angle)] = float('inf')
                     path[(row, col, angle)] = -1
                     visited[(row, col, angle)] = False
-                    # print(visited)
-                    # print(self.start)
             
         # create queue, push the source and mark distance from source to source as zero
-
         explored_states = []
         queue = []
         heappush(queue, (0, self.start))
-        # print(queue)
         distMap[self.start] = 0
-        # print(queue)
-        # print(distMap)
-      
 
-    
-        # run astar algorithm and find shortest path
-        g=0
         while(len(queue) > 0):
-            # g=g+1
-            # if(g>=6):
-            #     print(queue)
-            #     break
             heapify(queue)
             _, currNode = heappop(queue)
-            # print(currNode)
             visited[currNode] = True
             explored_states.append(currNode)
         
             # if goal node then exit
             if(self.CheckIfGoal(currNode[0],currNode[1]) == True):
                 break
-            # if(currNode[0] == self.goal[0] and currNode[1] == self.goal[1]):
-            #     break
-            
            
-            
             # go through each edge of current node
             a1 = currNode[2] + 30
             if(a1 >= 360):
                 a1 = a1 - 360
 
             a2 = currNode[2] + 60
-            # print(a2,"first")
             if(a2 >= 360):
                 a2 = a2 - 360
-                # print(a2,"second")
 
             a3 = currNode[2] - 30
             if(a3 < 0):
@@ -260,29 +235,21 @@ class Astar(object):
             h_dist = (((currNode[0] - self.goal[0]) ** 2) + 
                        ((currNode[1] - self.goal[1]) ** 2))
             h_dist = math.sqrt(h_dist)
-            # print(h_dist)
             
         
             
             
             if(self.ActionMove30Up(currNode[0], currNode[1], currNode[2]) and visited[(currNode[0] + round(self.j), currNode[1] + round(self.i), a1)] == False and (distMap[(currNode[0] + round(self.j), currNode[1] + round(self.i), a1)] > (distMap[currNode] + h_dist+1.12))):
-                # print("30Up",a1)
                 distMap[(currNode[0] + round(self.j), currNode[1] + round(self.i), a1)] = distMap[currNode] + h_dist +1.12
                 path[(currNode[0] + round(self.j), currNode[1] + round(self.i), a1)] = currNode
-                # print(path[(currNode[0] - 0.5, currNode[1] + 1, a1)])
                 heappush(queue, (distMap[(currNode[0] + round(self.j), currNode[1] + round(self.i), a1)], (currNode[0] + round(self.j), currNode[1] + round(self.i), a1)))
-                #print(distMap[(currNode[0] + 0.5, currNode[1] + 1, a1)], (currNode[0] + 0.5, currNode[1] + 1, a1))
 
             if(self.ActionMove60Up(currNode[0], currNode[1], currNode[2]) and visited[(currNode[0] + round(self.j), currNode[1] + round(self.i), a2)] == False and (distMap[(currNode[0] + round(self.j), currNode[1] + round(self.i), a2)] > distMap[currNode] + h_dist+1.12)):
-                # print("60Up",a2)
-                # print(" ")
-                # print(" ")
                 distMap[(currNode[0] + round(self.j), currNode[1] + round(self.i), a2)] = distMap[currNode] + h_dist+1.12
                 path[(currNode[0] + round(self.j), currNode[1] + round(self.i), a2)] = currNode
                 heappush(queue, (distMap[(currNode[0] + round(self.j), currNode[1] + round(self.i), a2)], (currNode[0] + round(self.j), currNode[1] + round(self.i), a2)))
 
             if(self.ActionMove30Down(currNode[0], currNode[1], currNode[2]) and visited[(currNode[0] + round(self.j), currNode[1] + round(self.i), a3)] == False and (distMap[(currNode[0] + round(self.j), currNode[1] + round(self.i), a3)] > distMap[currNode] + h_dist+1.12)):
-                # print("30Down",a3)
                 distMap[(currNode[0] + round(self.j), currNode[1] + round(self.i), a3)] = distMap[currNode] + h_dist+1.12
                 path[(currNode[0] + round(self.j), currNode[1] + round(self.i), a3)] = currNode
                 heappush(queue, (distMap[(currNode[0] + round(self.j), currNode[1] + round(self.i), a3)], (currNode[0] + round(self.j), currNode[1] + round(self.i), a3)))
@@ -318,7 +285,6 @@ class Astar(object):
             check.append(distMap[f1+1.5,f2,c])
         for c in range(0,360,30):
             check.append(distMap[f1-1.5,f2,c])
-        # print(len(check))
         NoPath = 0
         ans = float('inf')
         for a in range(len(check)):
@@ -344,9 +310,8 @@ class Astar(object):
             backtrack_states.append(node)
             node = path[node]
         backtrack_states.append(self.start)
-        backtrack_states = list(reversed(backtrack_states)) 
-        # print(backtrack_states) 
-        print(explored_states) 
+        backtrack_states = list(reversed(backtrack_states))
+        # print(explored_states) 
         return (explored_states, backtrack_states, distMap[cat,dog,bird])
     
 
@@ -356,14 +321,13 @@ class Astar(object):
     # animate path
     def animate(self, explored_states, backtrack_states, path):
         fourcc = cv2.VideoWriter_fourcc(*'XVID')
-        out = cv2.VideoWriter(str(path), fourcc, 20.0, (600,900))
+        out = cv2.VideoWriter(str(path), fourcc, 20.0, (self.numCols,self.numRows))
         image = np.zeros((self.numRows, self.numCols, 3), dtype=np.uint8)
         count = 0
         for state in explored_states:
             image[int(self.numRows - state[0]), int(state[1] - 1)] = (255, 150, 0)
             if(count%75 == 0):
-            #cv2.imshow('explored', image)
-                cv2.waitKey(5)
+                out.write(image)
             count = count + 1
 
         count = 0
@@ -384,3 +348,5 @@ class Astar(object):
                 cv2.waitKey(5)
                 
         cv2.waitKey(0)
+        cv2.destroyAllWindows()
+        out.release()

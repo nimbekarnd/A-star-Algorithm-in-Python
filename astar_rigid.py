@@ -11,9 +11,6 @@ goalCol = int(input("Enter the column coordinate for goal node (between 1 and 30
 radius = int(input("Enter the radius for the robot : "))
 clearance = int(input("Enter the clearance for the robot : "))
 
-#goalRow = 180
-#goalCol = 150
-
 # take start and goal node as input
 start = (startRow, startCol, startOrientation)
 goal = (goalRow, goalCol)
@@ -25,7 +22,6 @@ if(astar.IsValid(start[0], start[1])):
             if(astar.IsObstacle(goal[0], goal[1]) == False):
                 (explored_states, backtrack_states, distance_from_start_to_goal) = astar.Astar()
                 astar.animate(explored_states, backtrack_states, "./astar_rigid.avi")
-                # print optimal path found or not
                 if(distance_from_start_to_goal == float('inf')):
                     print("\nNo optimal path found.")
                 else:
